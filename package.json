@@ -27,11 +27,13 @@
   "dependencies": {
     "json-server": "0.16.3",
     "nocache": "2.1.0",
+    "path-browserify": "1.0.1",
     "serve": "11.3.0"
   },
   "devDependencies": {
     "@bahmutov/print-env": "1.2.0",
     "@cypress/eslint-plugin-dev": "5.0.0",
+    "cy-verify-downloads": "0.0.6",
     "cypress": "6.2.1",
     "eslint": "7.0.0",
     "eslint-plugin-cypress": "2.8.1",
