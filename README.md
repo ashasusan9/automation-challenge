@@ -46,3 +46,10 @@ Create a fork of this repo and send the link to your interviewer.
 - Overall structure of the presented code
 - Proper usage of page objects
 - Testing problems are green and asserting the right scenarios
+
+
+- Ran all the tests and everything is passing except the download one .
+
+Section 1 - ![Screen Shot 2022-01-25 at 9 16 03 AM](https://user-images.githubusercontent.com/98295448/150995086-32cc058c-7ebe-40f8-99f0-03dcbc9431eb.png)
+Section 2 - ![Screen Shot 2022-01-25 at 9 26 56 AM](https://user-images.githubusercontent.com/98295448/150995314-c2c02359-5d00-434c-aeff-0ecc7bc6b196.png)
+
