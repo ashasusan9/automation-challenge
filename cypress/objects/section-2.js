@@ -1,40 +1,48 @@
 const Section2 = {
-  /**
-   * A literal is considered static, stable strings (eg. titles, form labels, ...)
-   */
-  literals: {
-    SAMPLE_LITERAL: 'This is a sample literal. You can safely delete it.',
-  },
-
-  /**
-   * An element is a selector for any DOM element (eg. [data-test="xxx"], #id, ...)
-   */
+ 
   elements: {
-    sampleElement: '[data-test=sample-element-to-be-safely-deleted]',
+    networkCall: '[data-test=network-call-button]',
+    newTabButton: '[data-test=new-tab-button]',
+    fileDownloadButton :'[data-test=file-download-button]' 
   },
 
-  /**
-   * An action should be pretty self explanatory! It consists of all the method performing
-   * a particular action from clicking a simple button to doing complex assertions.
-   */
   actions: {
-    /**
-     * Example of action.
-     * In this example, we are grabbing a sample element, clicking on it and asserting the api answer.
-     *
-     * This is only used as an example and can be safely deleted.
-     */
-    assertSampleApiResponse () {
-      cy.server()
-      cy.wait('/endpoint').as('endpoint')
+    
+     clickNetworkRequestButton () {
+      cy.intercept("GET", "/todos/1").as("getTodo");
+      cy.get(Section2.elements.networkCall).click();
+      cy.wait('@getTodo', { timeout: 45000 }).then((interception) => {
+        expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.body.id).to.eq(1);
+        expect(interception.response.body.title).to.eq("Abnormally long network call!");
 
-      cy.get(Section2.elements.sampleElement).click()
-      // ... An api call to "/endpoint" performed on the app.
-      cy.wait('@endpoint').should((request) => {
-        expect(request.status).to.eq(200)
-      })
+      }) 
     },
-  },
+ 
+    AssertNewTab(){
+     
+      //Checking the properties of the href 
+      cy
+      .get(Section2.elements.newTabButton).parent()
+      .should('have.attr', 'target', '_blank')
+      .should('have.attr', 'rel', 'noopener noreferrer');
+
+      //Can remove target="_blank" attribute so that the new page is opened in the same tab cypress has access to 
+      //Used this document for finding this solution https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/testing-dom__tab-handling-links/cypress/integration/tab_handling_anchor_links_spec.js
+
+      cy.get(Section2.elements.newTabButton).parent().invoke('removeAttr', 'target')
+      cy.get(Section2.elements.newTabButton).click();
+      cy.url().should('equals', 'http://localhost:8080/')
+     },
+ 
+
+     AssertDownload(){
+      cy.get(Section2.elements.fileDownloadButton).click();
+      cy.verifyDownload('javascript-logo.png',{ timeout: 25000 })
+    },
+     
+  }, 
 }
 
 module.exports = { Section2 }
+
