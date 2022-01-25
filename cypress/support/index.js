@@ -1,20 +1,25 @@
+/// <reference types="cypress" />
 // ***********************************************************
-// This example support/index.js is processed and
-// loaded automatically before your test files.
+// This example plugins/index.js can be used to load plugins
 //
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
+// You can change the location of this file or turn off loading
+// the plugins file with the 'pluginsFile' configuration option.
 //
 // You can read more here:
-// https://on.cypress.io/configuration
+// https://on.cypress.io/plugins-guide
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
-import './commands'
+// This function is called when a project is opened or re-opened (e.g. due to
+// the project's config changing)
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+/**
+ * @type {Cypress.PluginConfig}
+ */
+// eslint-disable-next-line no-unused-vars
+
+const { isFileExist } = require('cy-verify-downloads');
+module.exports = (on, config) => {
+  // `on` is used to hook into various events Cypress emits
+  // `config` is the resolved Cypress config
+  on('task', { isFileExist })
+}
