@@ -1,38 +1,90 @@
 const Section1 = {
-  /**
-   * A literal is considered static, stable strings (eg. titles, form labels, ...)
-   */
   literals: {
-    SAMPLE_LITERAL: 'This is a sample literal. You can safely delete it.',
+    Name: 'Anna',
+    Age: '34'
   },
 
-  /**
-   * An element is a selector for any DOM element (eg. [data-test="xxx"], #id, ...)
-   */
   elements: {
-    sampleElement: '[data-test=sample-element-to-be-safely-deleted]',
+    showTable: '[data-test=table-toggle-button]',
+    userTable:'[data-test=user-table]' ,
+    tableHeader:'[data-test=table-header]',
+    formButton:'[data-test=form-toggle-button]',
+    signupForm:'[data-test=signup-form]',
+    fullNameInput: '[data-test=full-name-input]',
+    ageInput: '[data-test=age-input]',
+    submitButton: '[data-test=submit-btn]',
+    nurseInput:'[data-test=nurse-input]'
   },
 
-  /**
-   * An action should be pretty self explanatory! It consists of all the method performing
-   * a particular action from clicking a simple button to doing complex assertions.
-   */
   actions: {
-    /**
-     * Example of action.
-     * In this example, we are grabbing a sample element, clicking on it and asserting the api answer.
-     *
-     * This is only used as an example and can be safely deleted.
-     */
-    assertSampleApiResponse () {
-      cy.server()
-      cy.wait('/endpoint').as('endpoint')
+    clickTheShowTable(){
+      cy.get(Section1.elements.showTable).click();
+     },
 
-      cy.get(Section1.elements.sampleElement).click()
-      // ... An api call to "/endpoint" performed on the app.
-      cy.wait('@endpoint').should((request) => {
-        expect(request.status).to.eq(200)
+    clickTheShowForm(){
+      cy.get(Section1.elements. formButton).click();
+     },
+
+    assertTableIsNotvisible(){
+       cy.get(Section1.elements.userTable).should('not.be.visible');
+     },
+
+    assertTableIsVisible(){
+      cy.get(Section1.elements.userTable).should('be.visible');
+    },
+
+    assertFormIsVisible(){
+      cy.get(Section1.elements.signupForm).should('be.visible');
+    },
+
+    assertTableHas10Rows(){
+      cy.get(Section1.elements.userTable)
+      .find('tbody tr').should('have.length', 11)      
+    },
+
+    assertTableHas5Header(){
+      cy.get(Section1.elements.tableHeader)
+      .find('th').should('have.length', 5)      
+    },
+
+    assertTableUsers(){
+      cy.get(Section1.elements.userTable).then($el => {
+        cy.wrap($el).find("tr").then($els => {
+            expect($els.filter(index => $els.eq(index).is(':contains(user)'))).to.have.length(6);
+     })
+    })    
+    },
+
+    assertAge(){
+      cy.get("tbody > tr> :nth-child(4)").each(($el, index) => {
+        const dob = $el.text();
+        if ((Date.parse(dob) <= Date.parse('1/25/1962'))) {
+          cy.get("tbody > tr> :nth-child(4)").eq(index).then(function(Field) {
+            const Fieldtext = Field.text();
+            expect(Fieldtext).to.be.oneOf(['8/2/1956','5/25/1952','4/21/1955']);
+          })
+        }
       })
+      },
+
+    assertFormIsNotVisible(){
+      cy.get(Section1.elements.signupForm).should('not.be.visible');
+    },
+
+    assertNameAgeFilled(){
+      cy.get(Section1.elements.fullNameInput).type(Section1.literals.Name);
+      cy.get(Section1.elements.fullNameInput).should('have.value', Section1.literals.Name)
+      cy.get(Section1.elements.ageInput).type(Section1.literals.Age);
+      cy.get(Section1.elements.ageInput).should('have.value', Section1.literals.Age)
+    
+      cy.get('select').select('female').should('have.value', 'female');
+      cy.get(Section1.elements.nurseInput).check()
+      .should('be.checked') ;
+      cy.get(Section1.elements.submitButton).click();
+      cy.on('window:alert',(txt)=>{
+        //Mocha assertions
+        expect(txt).to.contains('Form submitted!');
+     })
     },
   },
 }
